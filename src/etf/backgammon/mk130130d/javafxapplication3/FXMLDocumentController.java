@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxapplication3;
+package etf.backgammon.mk130130d.javafxapplication3;
 
 import java.net.URL;
 import java.util.ResourceBundle;

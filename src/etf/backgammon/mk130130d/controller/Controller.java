@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package etf.backgammon.mk130130d.controller;
 
 
-import game.Dice;
-import game.Field;
+import etf.backgammon.mk130130d.game.Dice;
+import etf.backgammon.mk130130d.game.Field;
 
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.layout.Background;
-import view.TableField;
-import view.View;
+import etf.backgammon.mk130130d.view.TableField;
+import etf.backgammon.mk130130d.view.View;
 
 /**
  *
@@ -56,6 +56,13 @@ public class Controller {
         
         int dice1 = dice.getDice1();
         int dice2 = dice.getDice2();
+        if(dice.isHasMoved1() && dice.isHasMoved2())
+            return possibleNewFields;
+        
+        if(dice.isHasMoved1())
+            dice2 = dice1;
+        if(dice.isHasMoved2())
+            dice1 = dice2;
         
         if(player==1){
             for(int i=11;i>5;i--){
@@ -160,7 +167,7 @@ public class Controller {
         
         if(row>=5 && player == 1){
             int i = col - dice1;
-            if(i>0)
+            if(i>=0)
                 if(view.getField(9,i).getBackgroundColor()=="red"){
                     for(int k=8;k>4;k--)
                         if(view.getField(k, i).getBackgroundColor()!="red"){
@@ -175,7 +182,7 @@ public class Controller {
                     possibleFields.add(new Field(9,i,0,0));
             
             i = col - dice2;
-            if(i>0)
+            if(i>=0)
                 if(view.getField(9,i).getBackgroundColor()=="red"){
                     for(int k=8;k>4;k--)
                         if(view.getField(k, i).getBackgroundColor()!="red"){
@@ -189,8 +196,8 @@ public class Controller {
                 }else
                     possibleFields.add(new Field(9,i,0,0));
             
-            i = col + dice1 - 1;
-            if(i<12)
+            i = dice1 - col - 1;
+            if(i>=0)
                 if(view.getField(0, i).getBackgroundColor()=="red"){
                     for(int k=1;k<5;k++)
                         if(view.getField(k, i).getBackgroundColor()!="red"){
@@ -204,8 +211,8 @@ public class Controller {
                 }
                 else possibleFields.add(new Field(0,i,0,0));
             
-            i = col + dice2 -1;
-            if(i<12)
+            i = dice2 - col -1;
+            if(i>=0)
                 if(view.getField(0, i).getBackgroundColor()=="red"){
                     for(int k=1;k<5;k++)
                         if(view.getField(k, i).getBackgroundColor()!="red"){
@@ -223,7 +230,7 @@ public class Controller {
         
         //========================BLUE PLAYER===================================
         if(row>=5 && player == 2){
-            int i=col + dice1;
+            int i = col + dice1;
             if(i<12)
                 if(view.getField(9, i).getBackgroundColor()=="blue"){
                         for(int k=8;k>4;k--)
@@ -238,7 +245,7 @@ public class Controller {
                 }
                 else possibleFields.add(new Field(9,i,0,0));
             
-            i=col + dice2;
+            i = col + dice2;
             if(i<12)
                 if(view.getField(9, i).getBackgroundColor()=="blue"){
                         for(int k=8;k>4;k--)
@@ -258,9 +265,9 @@ public class Controller {
         if(row<5 && player == 2){
             
             int i = col - dice1;
-            if(i>0)
+            if(i>=0)
                 if(view.getField(0,i).getBackgroundColor()=="blue"){
-                    for(int k=1;k<5;k--)
+                    for(int k=1;k<5;k++)
                         if(view.getField(k, i).getBackgroundColor()!="blue"){
                             possibleFields.add(new Field(k,i,0,0));
                             break;
@@ -273,9 +280,9 @@ public class Controller {
                 else possibleFields.add(new Field(0,i,0,0));
             
             i = col - dice2;
-            if(i>0)
+            if(i>=0)
                 if(view.getField(0,i).getBackgroundColor()=="blue"){
-                    for(int k=1;k<5;k--)
+                    for(int k=1;k<5;k++)
                         if(view.getField(k, i).getBackgroundColor()!="blue"){
                             possibleFields.add(new Field(k,i,0,0));
                             break;
@@ -287,8 +294,8 @@ public class Controller {
                 }
                 else possibleFields.add(new Field(0,i,0,0));
             
-            i = col + dice1 - 1;
-            if(i<12)
+            i = dice1 - col - 1;
+            if(i>=0)
                 if(view.getField(9, i).getBackgroundColor()=="blue"){
                     for(int k=9;k>4;k--)
                         if(view.getField(k, i).getBackgroundColor()!="blue"){
@@ -302,8 +309,8 @@ public class Controller {
                 }
                 else possibleFields.add(new Field(9,i,0,0));
             
-            i = col + dice2 - 1;
-            if(i<12)
+            i = dice2 - col - 1;
+            if(i>=0)
                 if(view.getField(9, i).getBackgroundColor()=="blue"){
                     for(int k=9;k>4;k--)
                         if(view.getField(k, i).getBackgroundColor()!="blue"){
@@ -312,9 +319,9 @@ public class Controller {
                         }
                 }
                 else if(view.getField(9,i).getBackgroundColor()=="red"){
-                    if(view.getField(8, i).getBackgroundColor()!="red")
-                                possibleFields.add(new Field(9,i,0,0));
-                }
+                        if(view.getField(8, i).getBackgroundColor()!="red")
+                                    possibleFields.add(new Field(9,i,0,0));
+                    }
                 else possibleFields.add(new Field(9,i,0,0));
             
         }
@@ -346,7 +353,86 @@ public class Controller {
         return false;
     }
     
-    
+    public void clearField(){
+        if(pressedField == null)
+            view.setLog("select field");
+        else{
+            //check if all fields are in quarter
+            if(currentPlayer == 1){
+                if(eatenRed != 0){
+                    view.setLog("cannot clear field");
+                    return;
+                }
+                for(int i=0;i<10;i++){
+                    for(int j=0;j<12;j++){
+                        if(!(i<5 && j>5))
+                            if(view.getField(i, j).getBackgroundColor().equals("red")){
+                                view.setLog("cannot clear field");
+                                return;
+                            }
+                    }
+                }
+                int dice1 = dice.getDice1();
+                int dice2 = dice.getDice2();
+                if(dice.isHasMoved1())
+                    dice1 = dice2;
+                else if (dice.isHasMoved2())
+                    dice2 = dice1;
+
+                if(dice1 >= 12 - pressedField.getJ() || dice2 >= 12 - pressedField.getJ()){
+                    view.getField(pressedField.getI(), pressedField.getJ()).setColorAndBorder("white", "black");
+                    pointsRed -= 12 - pressedField.getJ();
+                    view.setPointsRed(pointsRed);
+                    nextPlayer();
+                    return;
+                }
+                else{
+                    view.setLog("cannot clear field");
+                    return;
+                }
+                
+                
+            
+            }else{
+                //current player blue
+                if(eatenBlue != 0){
+                    view.setLog("cannot clear field");
+                    return;
+                }
+                for(int i=0;i<10;i++){
+                    for(int j=0;j<12;j++){
+                        if(!(i>5 && j>5))
+                            if(view.getField(i, j).getBackgroundColor().equals("blue")){
+                                view.setLog("cannot clear field");
+                                return;
+                            }
+                    }
+                }
+                
+                int dice1 = dice.getDice1();
+                int dice2 = dice.getDice2();
+                if(dice.isHasMoved1())
+                    dice1 = dice2;
+                else if (dice.isHasMoved2())
+                    dice2 = dice1;
+                
+                if(dice1 >= 12 - pressedField.getJ() || dice2 >= 12 - pressedField.getJ()){
+                    view.getField(pressedField.getI(), pressedField.getJ()).setColorAndBorder("white", "black");
+                    pointsBlue -= 12 - pressedField.getJ();
+                    view.setPointsBlue(pointsBlue);
+                    nextPlayer();
+                    return;
+                }
+                else{
+                    view.setLog("cannot clear field");
+                    return;
+                }
+                
+               
+            }
+            
+        }
+    }
     
     
     
@@ -417,9 +503,9 @@ public class Controller {
                 
                 if(eatenRed==0){
                     for(int index=0;index<possibleFields.size();index++){
-                        view.getField(i, j).setColorAndBorder(view.getField(i, j).getBackgroundColor(), "black");
+                       view.getField(possibleFields.get(index).getI(), possibleFields.get(index).getJ()).setColorAndBorder(view.getField(possibleFields.get(index).getI(), possibleFields.get(index).getJ()).getBackgroundColor(), "black");
                     }
-                    possibleFields = new ArrayList<Field>();
+                    
                 }
                 
                 nextPlayer();
@@ -457,7 +543,7 @@ public class Controller {
 
                 if(eatenBlue==0){
                     for(int index=0;index<possibleFields.size();index++){
-                        view.getField(i, j).setColorAndBorder(view.getField(i, j).getBackgroundColor(), "black");
+                        view.getField(possibleFields.get(index).getI(), possibleFields.get(index).getJ()).setColorAndBorder(view.getField(possibleFields.get(index).getI(), possibleFields.get(index).getJ()).getBackgroundColor(), "black");
                     }
                     possibleFields = new ArrayList<Field>();
                 }
@@ -531,7 +617,16 @@ public class Controller {
                         if (Math.abs(prevJ - j)==dice.getDice1()){
                             dice.setHasMoved1(true);
                             points = dice.getDice1();
-                            possibleFields = calculatePossibleFields(pressedField, currentPlayer);
+                            
+                            if(currentPlayer == 1)
+                                if(eatenRed!=0)
+                                    possibleFields = calculateNewTokenFields(currentPlayer);
+                                else
+                                    possibleFields = calculatePossibleFields(pressedField, currentPlayer);
+                            else if(eatenBlue!=0)
+                                    possibleFields = calculateNewTokenFields(currentPlayer);
+                                else
+                                    possibleFields = calculatePossibleFields(pressedField, currentPlayer);
 
                         }else {
                             dice.setHasMoved2(true);
@@ -629,6 +724,10 @@ public class Controller {
 
             view.setDice1Label(0);
             view.setDice2Label(0);
+            for(Field field : possibleFields){
+                if(!view.getField(field.getI(), field.getJ()).getBackgroundColor().equals("red") || !view.getField(field.getI(), field.getJ()).getBackgroundColor().equals("blue"))
+                view.getField(field.getI(), field.getJ()).setColorAndBorder("white", "black");
+            }
             possibleFields = new ArrayList<Field>();
         }
     }
@@ -696,21 +795,132 @@ public class Controller {
             view.setLog("red players turn");
             return;
         }
+        
+        boolean cleared = clearComputerField();
+        if(cleared){
+            nextPlayer();
+            return;
+        }
 
         
         List<Field> activeFields = getActiveFields();
         List<Field> allPossibleFields = getAllPossibleFields(activeFields);
         possibleFields = allPossibleFields;
-        Field chosenField = chooseField(allPossibleFields);
+        Field chosenField = chooseFieldExpectiMax(allPossibleFields);
         pressedField = chosenField.getParentField();
         pressedField(chosenField.getI(),chosenField.getJ());
         
         
     }
-   
     
-    public Field chooseField(List<Field> allPossibleFields){
-        int index = ((int)Math.random()*allPossibleFields.size());
+    public boolean clearComputerField(){
+        if(eatenBlue != 0)
+            return false;
+        
+        for(int i=0;i<10;i++){
+            for(int j=0;j<12;j++){
+                if(!(i>=5 && j>5))
+                    if(view.getField(i, j).getBackgroundColor().equals("blue")){
+                        return false;
+                    }
+            }
+        }
+                
+                int dice1 = dice.getDice1();
+                int dice2 = dice.getDice2();
+                if(dice.isHasMoved1())
+                    dice1 = dice2;
+                else if (dice.isHasMoved2())
+                    dice2 = dice1;
+                
+                for(int j=6;j<12;j++)
+                    for(int i=5;i<10;i++){
+                        if(view.getField(i, j).getBackgroundColor().equals("blue")){
+                            if(dice1 >= 12 - j || dice2 >= 12 - j){
+                                view.getField(i,j).setColorAndBorder("white", "black");
+                                pointsBlue -= 12 - j;
+                                view.setPointsBlue(pointsBlue);
+                                return true;
+                            }else
+                                continue;
+                        }
+                    }
+                return false;
+    }
+    
+    public Field chooseFieldExpectiMax(List<Field> allPossibleFields){
+        int eatingFieldsMaxIndex = 0;
+        int eatingFieldsMax = 0;
+        int coveringFieldsMaxIndex = 0;
+        int coveringFieldsMax = 0;
+        List<Field> coveringFields = new ArrayList<Field>();
+        List<Field> eatingFields = new ArrayList<Field>();
+        //greedy algorithm
+        for(Field field : allPossibleFields){
+            int i = field.getI();
+            int j = field.getJ();
+
+            if(i==8)
+                if(view.getField(9, j).getBackgroundColor().equals("blue")){
+                    for(int k=j;k<12;k++)
+                        if(view.getField(9, k).getBackgroundColor().equals("red"))
+                            coveringFields.add(field);
+                }
+                    
+            if(i==1)
+                 if(view.getField(0, j).getBackgroundColor().equals("blue"))
+                    coveringFields.add(field);
+            
+            if(view.getField(i, j).getBackgroundColor().equals("red"))
+                eatingFields.add(field);
+        }            
+        int index = 0;
+        for(Field field : coveringFields){
+            int i = field.getI();
+            int j = field.getJ();
+            
+            if(i<=5){
+                if(coveringFieldsMax < j){
+                    coveringFieldsMaxIndex = index;
+                    coveringFieldsMax = j;
+                }
+            }else{
+                if(coveringFieldsMax < 12 + j){
+                    coveringFieldsMaxIndex = index;
+                    coveringFieldsMax = 12 + j;
+                }
+            }
+            index++;
+        }
+        index = 0;
+        for(Field field : eatingFields){
+            int i = field.getI();
+            int j = field.getJ();
+            
+            if(i>5){
+                if(eatingFieldsMax < j){
+                    eatingFieldsMaxIndex = index;
+                    eatingFieldsMax = j;
+                }
+            }else{
+                if(eatingFieldsMax < 12 + j){
+                    eatingFieldsMaxIndex = index;
+                    eatingFieldsMax = 12 + j;
+                }
+            }
+            index++;
+        }
+        if(eatingFieldsMax + coveringFieldsMax == 0)
+            return chooseFieldRandom(allPossibleFields);
+        
+        if(eatingFieldsMax < coveringFieldsMax)
+            return coveringFields.get(coveringFieldsMaxIndex);
+        else 
+            return eatingFields.get(eatingFieldsMaxIndex);
+    }
+    
+    public Field chooseFieldRandom(List<Field> allPossibleFields){
+        int index = ((int)(Math.random()*allPossibleFields.size()));
         return allPossibleFields.get(index);
     }
     

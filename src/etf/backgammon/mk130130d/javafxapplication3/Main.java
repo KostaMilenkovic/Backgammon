@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javafxapplication3;
+package etf.backgammon.mk130130d.javafxapplication3;
 
-import controller.Controller;
+import etf.backgammon.mk130130d.controller.Controller;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -16,7 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import view.View;
+import etf.backgammon.mk130130d.view.View;
 
 /**
  *

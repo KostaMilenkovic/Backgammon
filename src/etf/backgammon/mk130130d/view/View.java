@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package view;
+package etf.backgammon.mk130130d.view;
 
-import controller.Controller;
+import etf.backgammon.mk130130d.controller.Controller;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,6 +40,7 @@ public class View {
     private Label bluePoints;
     private TableField[][] tableField;
     private Button computerPlayButton;
+    private Button clearFieldButton;
     
     
     private Controller controller;
@@ -74,6 +75,7 @@ public class View {
         computerPlayButton = (Button)scene.lookup("#computerPlayButton");
         redPoints = (Label)scene.lookup("#redPointsLabel");
         bluePoints = (Label)scene.lookup("#bluePointsLabel");
+        clearFieldButton = (Button)scene.lookup("#clearField");
         
         turnLabel.setText("red player turn");
         logLabel.setText("");
@@ -103,6 +105,13 @@ public class View {
             @Override
             public void handle(ActionEvent event) {
                 controller.startPressed();
+            }
+        });
+        
+        clearFieldButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                controller.clearField();
             }
         });
         
